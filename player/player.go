@@ -43,8 +43,8 @@ func Stop() error {
 	defer lock.Unlock()
 
 	if cmd != nil && cmd.Process != nil {
-		// Kill the process using the PID
-		err := cmd.Process.Kill()
+		// Send an interrupt signal to the process
+		err := cmd.Process.Signal(os.Interrupt)
 		if err != nil {
 			return fmt.Errorf("failed to stop MP3: %w", err)
 		}
