@@ -7,6 +7,7 @@ import (
 
 	"github.com/aleadinglight/turntable/config"
 	"github.com/aleadinglight/turntable/downloader"
+	"github.com/aleadinglight/turntable/player"
 	"github.com/aleadinglight/turntable/scanner"
 	"github.com/spf13/cobra"
 )
@@ -49,9 +50,26 @@ var cmdDownload = &cobra.Command{
 	},
 }
 
+var playCmd = &cobra.Command{
+	Use:   "play [path]",
+	Short: "Play an MP3 file",
+	Long:  `Plays the specified MP3 file using the player package.`,
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		err := player.PlayMP3(args[0])
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error playing MP3 file: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Playing:", args[0])
+	},
+}
+
 func main() {
 	rootCmd.AddCommand(cmdScan)
 	rootCmd.AddCommand(cmdDownload)
+	rootCmd.AddCommand(playCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
