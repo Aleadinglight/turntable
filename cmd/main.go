@@ -65,10 +65,26 @@ var playCmd = &cobra.Command{
 	},
 }
 
+var stopCmd = &cobra.Command{
+	Use:   "stop",
+	Short: "Stop playing the current song",
+	Long:  `Stop playing the current song using the os signal.`,
+	Args:  cobra.ExactArgs(0),
+	Run: func(cmd *cobra.Command, args []string) {
+		err := player.Stop()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error stopping current playing song: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Stopped", args[0])
+	},
+}
+
 func main() {
 	rootCmd.AddCommand(cmdScan)
 	rootCmd.AddCommand(cmdDownload)
 	rootCmd.AddCommand(playCmd)
+	rootCmd.AddCommand(stopCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
