@@ -5,6 +5,8 @@ import (
 	"io"
 	"os"
 	"os/exec"
+
+	"github.com/aleadinglight/turntable/config"
 )
 
 // checks if yt-dlp and ffmpeg are installed on the system
@@ -60,7 +62,7 @@ func runCommand(command string, args ...string) error {
 
 // downloads the audio from a YouTube video as an MP3 file
 func DownloadMP3(youtubeVideoLink string) error {
-	err := runCommand("yt-dlp", "-x", "--audio-format", "mp3", "-P", "~/Music/", youtubeVideoLink)
+	err := runCommand("yt-dlp", "-x", "--audio-format", "mp3", "-P", config.MusicDir, youtubeVideoLink)
 	if err != nil {
 		return fmt.Errorf("failed to download MP3: %v", err)
 	}
