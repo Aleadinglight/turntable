@@ -1,4 +1,8 @@
 package config
 
 // MusicDir is the directory for reading and writing data
-const MusicDir = "~/Music"
+var MusicDir = "~/Music"
+
+func Update(path string) {
+	MusicDir = path
+}
