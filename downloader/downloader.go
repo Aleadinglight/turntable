@@ -61,8 +61,13 @@ func runCommand(command string, args ...string) error {
 }
 
 // downloads the audio from a YouTube video as an MP3 file
-func DownloadMP3(youtubeVideoLink string) error {
-	err := runCommand("yt-dlp", "-x", "--audio-format", "mp3", "-P", config.MusicDir, youtubeVideoLink)
+func DownloadMP3(youtubeVideoLink string, saveDir string) error {
+	dir := saveDir
+	if dir == "" {
+		dir = config.MusicDir
+	}
+
+	err := runCommand("yt-dlp", "-x", "--audio-format", "mp3", "-P", dir, youtubeVideoLink)
 	if err != nil {
 		return fmt.Errorf("failed to download MP3: %v", err)
 	}
