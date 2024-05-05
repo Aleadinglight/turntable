@@ -7,16 +7,23 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/aleadinglight/turntable/config"
 )
 
 var (
-	cmd  *exec.Cmd
-	lock sync.Mutex
+	cmd         *exec.Cmd
+	lock        sync.Mutex
+	pidFilePath = config.PidFilePath
 )
 
 func PlayMP3(mp3 string) error {
 	lock.Lock()
 	defer lock.Unlock()
+
+	if isSongPlaying() {
+		return fmt.Errorf("another song is currently playing")
+	}
 
 	// Check if mpg123 command is available
 	_, err := exec.LookPath("mpg123")
@@ -39,7 +46,7 @@ func PlayMP3(mp3 string) error {
 	}
 
 	// Write PID to a file
-	err = os.WriteFile("/tmp/mpg123.pid", []byte(fmt.Sprintf("%d", cmd.Process.Pid)), 0644)
+	err = os.WriteFile(pidFilePath, []byte(fmt.Sprintf("%d", cmd.Process.Pid)), 0644)
 	if err != nil {
 		return fmt.Errorf("failed to write PID file: %w", err)
 	}
@@ -51,8 +58,12 @@ func Stop() error {
 	lock.Lock()
 	defer lock.Unlock()
 
+	if !isSongPlaying() {
+		return fmt.Errorf("no song is currently playing")
+	}
+
 	// Read PID from file
-	pidData, err := os.ReadFile("/tmp/mpg123.pid")
+	pidData, err := os.ReadFile(pidFilePath)
 	if err != nil {
 		return fmt.Errorf("failed to read PID file: %w", err)
 	}
@@ -77,6 +88,11 @@ func Stop() error {
 		return fmt.Errorf("failed to stop MP3: %w", err)
 	}
 
+	// Remove the PID file
+	if err := os.Remove(pidFilePath); err != nil {
+		return fmt.Errorf("failed to remove PID file: %w", err)
+	}
+
 	return nil
 }
 
@@ -90,4 +106,11 @@ func isMPG123Process(pid int) bool {
 
 	// Check if the cmdline contains the name of the mpg123 binary
 	return strings.Contains(string(cmdline), "mpg123")
+}
+
+func isSongPlaying() bool {
+	if _, err := os.Stat(pidFilePath); err == nil {
+		return true // PID file exists, song is likely playing
+	}
+	return false // No PID file, no song is playing
 }
