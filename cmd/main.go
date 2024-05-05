@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// Define a string flag with a default value and a usage description
-	soundDir := flag.String("d", "./sounds", "the directory to scan for mp3 files")
+	soundDir := flag.String("d", "~/sounds", "the directory to scan for mp3 files")
 
 	// Parse the flags
 	flag.Parse()
