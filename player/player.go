@@ -2,35 +2,31 @@ package player
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
 	"sync"
+
+	"github.com/aleadinglight/turntable/utils"
+)
+
+const (
+	musicApp = "mpg123"
 )
 
 var (
-	cmd  *exec.Cmd
 	lock sync.Mutex
 )
 
 func PlayMP3(mp3 string) error {
 	lock.Lock()
 	defer lock.Unlock()
+
 	// Check if mpg123 command is available
-	_, err := exec.LookPath("mpg123")
-	if err != nil {
-		return fmt.Errorf("mpg123 command not found: %w", err)
+	if !utils.CheckAppExists(musicApp) {
+		return fmt.Errorf("mpg123 is not installed")
 	}
 
-	// Check if another song is playing
-	if cmd != nil && cmd.Process != nil {
-		return fmt.Errorf("another song is currently playing")
-	}
+	// TODO Check if another song is playing
 
-	cmd = exec.Command("mpg123", mp3)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	err = cmd.Start()
+	err := utils.RunCommandAsyncWithArgs("mpg123", []string{mp3})
 	if err != nil {
 		return fmt.Errorf("failed to play MP3: %w", err)
 	}
@@ -38,19 +34,16 @@ func PlayMP3(mp3 string) error {
 	return nil
 }
 
+// Stop all currently playing songs
 func Stop() error {
 	lock.Lock()
 	defer lock.Unlock()
 
-	if cmd != nil && cmd.Process != nil {
-		// Send an interrupt signal to the process
-		err := cmd.Process.Signal(os.Interrupt)
-		if err != nil {
-			return fmt.Errorf("failed to stop MP3: %w", err)
-		}
-		cmd = nil
-		return nil
+	// Run command to stop playing MP3
+	err := utils.RunCommand(fmt.Sprintf("pkill %s", musicApp))
+	if err != nil {
+		return fmt.Errorf("failed to stop playing MP3: %w", err)
 	}
 
-	return fmt.Errorf("no song is currently playing")
+	return nil
 }

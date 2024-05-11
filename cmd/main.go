@@ -4,6 +4,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/aleadinglight/turntable/config"
 	"github.com/aleadinglight/turntable/downloader"
@@ -90,4 +92,14 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
+
+	// Setup signal handling to catch SIGINT and SIGTERM
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-sigs
+		// Clean up: Delete PID file
+		os.Remove("/tmp/mpg123.pid")
+		os.Exit(0)
+	}()
 }
