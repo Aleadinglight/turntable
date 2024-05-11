@@ -48,12 +48,12 @@ var cmdDownload = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		url := args[0] // Get the URL from the arguments
-		err := downloader.DownloadMP3(url, config.MusicDir)
+		outputDir, fileName, err := downloader.DownloadMP3(url, config.MusicDir)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error downloading video from %s: %v\n", url, err)
 			os.Exit(1)
 		}
-		fmt.Println("Downloaded video from:", url)
+		fmt.Println("Downloaded video from:", url, " to: %s/%s.mp3", outputDir, fileName)
 	},
 }
 

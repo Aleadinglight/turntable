@@ -15,7 +15,7 @@ func ScanMP3Files(dirToScan string) ([]string, error) {
 		}
 
 		// Check if the file has an mp3 extension
-		if path.Ext(filePath) == ".mp3" {
+		if path.Ext(filePath) == ".json" {
 			mp3Files = append(mp3Files, filePath)
 		}
 		return nil

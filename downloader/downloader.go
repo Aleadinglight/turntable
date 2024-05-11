@@ -7,20 +7,26 @@ import (
 	"os/exec"
 
 	"github.com/aleadinglight/turntable/config"
+	"github.com/google/uuid"
 )
 
-// checks if yt-dlp and ffmpeg are installed on the system
+const (
+	DownloaderApp   = config.DownloaderApp
+	AudioProcessApp = config.AudioProcessApp
+)
+
+// checks if DownloaderApp and ffmpeg are installed on the system
 func checkDependencies() error {
-	// Check if yt-dlp is installed
-	_, err := exec.LookPath("yt-dlp")
+	// Check if DownloaderApp is installed
+	_, err := exec.LookPath(DownloaderApp)
 	if err != nil {
-		return fmt.Errorf("yt-dlp is not installed")
+		return fmt.Errorf("%s is not installed", DownloaderApp)
 	}
 
 	// Check if ffmpeg is installed
-	_, err = exec.LookPath("ffmpeg")
+	_, err = exec.LookPath(AudioProcessApp)
 	if err != nil {
-		return fmt.Errorf("ffmpeg is not installed")
+		return fmt.Errorf("%s is not installed", AudioProcessApp)
 	}
 
 	return nil
@@ -60,17 +66,19 @@ func runCommand(command string, args ...string) error {
 	return nil
 }
 
-// downloads the audio from a YouTube video as an MP3 file
-func DownloadMP3(youtubeVideoLink string, saveDir string) error {
-	dir := saveDir
+// downloads the audio from a YouTube video as an MP3 file and returns the file name
+func DownloadMP3(youtubeVideoLink string, saveDir string) (dir string, fileName string, err error) {
+	dir = saveDir
 	if dir == "" {
 		dir = config.MusicDir
 	}
 
-	err := runCommand("yt-dlp", "-x", "--audio-format", "mp3", "-P", dir, youtubeVideoLink)
+	fileName = uuid.New().String()
+
+	err = runCommand(DownloaderApp, "-x", "--audio-format", "mp3", "-P", dir, "-o", fileName, "--write-info-json", youtubeVideoLink)
 	if err != nil {
-		return fmt.Errorf("failed to download MP3: %v", err)
+		err = fmt.Errorf("failed to download MP3: %v", err)
 	}
 
-	return nil
+	return dir, fileName, err
 }
