@@ -32,7 +32,12 @@ var cmdScan = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "Error scanning for songs in %s: %v\n", config.MusicDir, err)
 			os.Exit(1)
 		}
-		fmt.Println("Found songs:", songs)
+
+		// Print the songs found
+		fmt.Printf("Found %d song(s):\n", len(songs))
+		for _, song := range songs {
+			fmt.Println(song)
+		}
 	},
 }
 
