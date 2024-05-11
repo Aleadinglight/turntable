@@ -83,7 +83,7 @@ var stopCmd = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "Error stopping current playing song: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Println("Stopped", args[0])
+		fmt.Println("Stopped all songs")
 	},
 }
 
