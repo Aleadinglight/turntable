@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 func ScanFiles(dirToScan string, extension string) (files []string, err error) {
@@ -46,10 +47,14 @@ func ReadJSONMetadata(metadataFiles []string) ([]SongInfo, error) {
 			return nil, err
 		}
 
+		// Get the corresponding mp3 file
+		// mp3 file path is saved alongside the metadata file with the same name
+		mp3FilePath := strings.TrimSuffix(file, ".info.json") + ".mp3"
+
 		// Create SongInfo from SongMetadata
 		info := SongInfo{
 			SongMetadata: metadata,
-			FilePath:     file,
+			FilePath:     mp3FilePath,
 		}
 
 		songInfo = append(songInfo, info)
