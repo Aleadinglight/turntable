@@ -27,7 +27,7 @@ var cmdScan = &cobra.Command{
 	Long:  `Scan the directory specified for music mp3 files.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Access configuration for directory
-		songs, err := scanner.ScanMP3Files(config.MusicDir)
+		songs, err := scanner.GetAllSongs(config.MusicDir)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error scanning for songs in %s: %v\n", config.MusicDir, err)
 			os.Exit(1)
@@ -36,7 +36,7 @@ var cmdScan = &cobra.Command{
 		// Print the songs found
 		fmt.Printf("Found %d song(s):\n", len(songs))
 		for _, song := range songs {
-			fmt.Println(song)
+			fmt.Println(song.SongMetadata.Title, " - ", song.FilePath)
 		}
 	},
 }
