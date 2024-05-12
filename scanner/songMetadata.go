@@ -12,5 +12,6 @@ type SongMetadata struct {
 
 type SongInfo struct {
 	SongMetadata SongMetadata
-	FilePath     string
+	FullPath     string
+	FileName     string
 }

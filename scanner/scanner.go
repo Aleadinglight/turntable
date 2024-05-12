@@ -50,11 +50,13 @@ func ReadJSONMetadata(metadataFiles []string) ([]SongInfo, error) {
 		// Get the corresponding mp3 file
 		// mp3 file path is saved alongside the metadata file with the same name
 		mp3FilePath := strings.TrimSuffix(file, ".info.json") + ".mp3"
+		mp3FileName := filepath.Base(mp3FilePath)
 
 		// Create SongInfo from SongMetadata
 		info := SongInfo{
 			SongMetadata: metadata,
-			FilePath:     mp3FilePath,
+			FullPath:     mp3FilePath,
+			FileName:     mp3FileName,
 		}
 
 		songInfo = append(songInfo, info)
