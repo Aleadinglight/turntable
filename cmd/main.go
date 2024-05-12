@@ -14,6 +14,7 @@ import (
 	"github.com/aleadinglight/turntable/downloader"
 	"github.com/aleadinglight/turntable/player"
 	"github.com/aleadinglight/turntable/scanner"
+	"github.com/aleadinglight/turntable/utils"
 )
 
 var rootCmd = &cobra.Command{
@@ -45,7 +46,7 @@ var cmdScan = &cobra.Command{
 		// Print the songs found
 		fmt.Printf("Found %d song(s):\n", len(songs))
 		for _, song := range songs {
-			tableData = append(tableData, []string{song.SongMetadata.Title, song.SongMetadata.YoutubeID, fmt.Sprintf("%d", song.SongMetadata.Duration), song.FileName})
+			tableData = append(tableData, []string{utils.InsertLineBreaks(song.SongMetadata.Title, 20), song.SongMetadata.YoutubeID, song.SongMetadata.DurationString, song.FileName})
 		}
 
 		// Create a table with the defined data.
