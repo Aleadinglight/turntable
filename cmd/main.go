@@ -7,11 +7,13 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/pterm/pterm"
+	"github.com/spf13/cobra"
+
 	"github.com/aleadinglight/turntable/config"
 	"github.com/aleadinglight/turntable/downloader"
 	"github.com/aleadinglight/turntable/player"
 	"github.com/aleadinglight/turntable/scanner"
-	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
@@ -33,11 +35,23 @@ var cmdScan = &cobra.Command{
 			os.Exit(1)
 		}
 
+		// Define the data for the table.
+		// Each inner slice represents a row in the table.
+		// The first row is considered as the header of the table.
+		tableData := pterm.TableData{
+			[]string{"Title", "YoutubeID", "Duration", "FileName"},
+		}
+
 		// Print the songs found
 		fmt.Printf("Found %d song(s):\n", len(songs))
 		for _, song := range songs {
-			fmt.Println(song.SongMetadata.Title, " - ", song.FilePath)
+			tableData = append(tableData, []string{song.SongMetadata.Title, song.SongMetadata.YoutubeID, fmt.Sprintf("%d", song.SongMetadata.Duration), song.FileName})
 		}
+
+		// Create a table with the defined data.
+		// The table has a header and is boxed.
+		// Finally, render the table to print it.
+		pterm.DefaultTable.WithHasHeader().WithBoxed().WithRowSeparator("-").WithHeaderRowSeparator("=").WithData(tableData).Render()
 	},
 }
 
@@ -55,7 +69,7 @@ var cmdList = &cobra.Command{
 
 		// Print the songs filePath as a list
 		for _, song := range songs {
-			fmt.Println(song.FilePath)
+			fmt.Println(song.FullPath)
 		}
 	},
 }
