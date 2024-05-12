@@ -41,16 +41,13 @@ var cmdScan = &cobra.Command{
 		// The first row is considered as the header of the table.
 		tableData := pterm.TableData{
 			[]string{"Title", "YoutubeID", "Duration", "FileName"},
-			[]string{"Title", utils.InsertLineBreaks("This is a long textttttttttttttttttttttttttttttttttttt", 20), "Duration", "FileName"},
 		}
 
 		// Print the songs found
 		fmt.Printf("Found %d song(s):\n", len(songs))
 		for _, song := range songs {
-			formatTitle := utils.InsertLineBreaks(song.SongMetadata.Title, 20)
-			tableData = append(tableData, []string{formatTitle, song.SongMetadata.YoutubeID, song.SongMetadata.DurationString, song.FileName})
+			tableData = append(tableData, []string{utils.InsertLineBreaks(song.SongMetadata.Title, 30), song.SongMetadata.YoutubeID, song.SongMetadata.DurationString, song.FileName})
 		}
-		fmt.Println(utils.InsertLineBreaks("This is a long textttttttttttttttttttttttttttttttttttt", 20))
 		// Create a table with the defined data.
 		// The table has a header and is boxed.
 		// Finally, render the table to print it.

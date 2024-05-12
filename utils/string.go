@@ -1,14 +1,18 @@
 package utils
 
-import "strings"
+import (
+	"strings"
+)
 
 func InsertLineBreaks(s string, interval int) string {
 	var result strings.Builder
-	for i, r := range s {
-		if i%interval == 0 && i != 0 {
+	charCount := 0
+	for _, r := range s {
+		result.WriteRune(r)
+		charCount++
+		if charCount%interval == 0 && charCount != len([]rune(s)) {
 			result.WriteRune('\n')
 		}
-		result.WriteRune(r)
 	}
 	return result.String()
 }
