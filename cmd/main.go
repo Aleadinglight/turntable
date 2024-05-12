@@ -76,7 +76,6 @@ var stopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop playing the current song",
 	Long:  `Stop playing the current song using the os signal.`,
-	Args:  cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := player.Stop()
 		if err != nil {
