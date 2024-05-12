@@ -40,7 +40,7 @@ func Stop() error {
 	defer lock.Unlock()
 
 	// Run command to stop playing MP3
-	err := utils.RunCommand(fmt.Sprintf("pkill %s", musicApp))
+	err := utils.RunCommandWithArgs("pkill", []string{musicApp})
 	if err != nil {
 		return fmt.Errorf("failed to stop playing MP3: %w", err)
 	}

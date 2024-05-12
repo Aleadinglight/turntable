@@ -27,12 +27,17 @@ var cmdScan = &cobra.Command{
 	Long:  `Scan the directory specified for music mp3 files.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Access configuration for directory
-		songs, err := scanner.ScanMP3Files(config.MusicDir)
+		songs, err := scanner.GetAllSongs(config.MusicDir)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error scanning for songs in %s: %v\n", config.MusicDir, err)
 			os.Exit(1)
 		}
-		fmt.Println("Found songs:", songs)
+
+		// Print the songs found
+		fmt.Printf("Found %d song(s):\n", len(songs))
+		for _, song := range songs {
+			fmt.Println(song.SongMetadata.Title, " - ", song.FilePath)
+		}
 	},
 }
 
@@ -43,12 +48,12 @@ var cmdDownload = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		url := args[0] // Get the URL from the arguments
-		err := downloader.DownloadMP3(url, config.MusicDir)
+		outputDir, fileName, err := downloader.DownloadMP3(url, config.MusicDir)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error downloading video from %s: %v\n", url, err)
 			os.Exit(1)
 		}
-		fmt.Println("Downloaded video from:", url)
+		fmt.Println("Downloaded video from:", url, " to: %s/%s.mp3", outputDir, fileName)
 	},
 }
 
@@ -78,7 +83,7 @@ var stopCmd = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "Error stopping current playing song: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Println("Stopped", args[0])
+		fmt.Println("Stopped all songs")
 	},
 }
 

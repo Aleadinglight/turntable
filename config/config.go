@@ -6,9 +6,17 @@ import (
 	"path/filepath"
 )
 
-// MusicDir is the directory for reading and writing data
-var MusicDir string
-var PidFilePath string
+const (
+	MusicPlayerApp  = "mpg123"
+	DownloaderApp   = "yt-dlp"
+	AudioProcessApp = "ffmpeg"
+)
+
+var (
+	// MusicDir is the directory for reading and writing data
+	MusicDir    string
+	PidFilePath string
+)
 
 func init() {
 	// Get the user's home directory
