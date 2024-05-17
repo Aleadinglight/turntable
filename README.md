@@ -1,13 +1,13 @@
 # Turntable
 
-Turntable is a fast and flexible music player and downloader built using Go. It allows users to play and download MP3 songs from the internet, manage music files locally, and view song metadata in a well-formatted table.
+Turntable is a fast and flexible music player and downloader built using Go. It allows users to play and download MP3 songs from Youtube, manage music files locally, and view song metadata in a well-formatted table.
 
 ## Features
 
 - **Play MP3 songs** directly from your filesystem.
-- **Download songs** from provided URLs into a specified directory.
-- **Scan directories** for music files and display their metadata.
-- **List all songs** in a directory.
+- **Download songs** from provided Youtube URLs into a specified directory.
+- **Scan directories** for all downloaded songs and metadata information.
+- **List all audio files** in a directory.
 - **Stop playback** of the current song using OS signals.
 
 ## Installation
@@ -49,9 +49,6 @@ To download a song from a URL:
 ```
 Replace `[url]` with the actual URL of the song.
 
-Certainly! Here's a refined version of the sections for listing and scanning songs in a directory, with clearer language and added detail for both functionalities in your `README.md`:
-
-```markdown
 ### Listing Songs in a Directory
 
 To list all song files in the configured directory:
