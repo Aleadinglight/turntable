@@ -10,9 +10,14 @@ Turntable is a fast and flexible music player and downloader built using Go. It 
 - **List all audio files** in a directory.
 - **Stop playback** of the current song using OS signals.
 
+## Dependencies
+- **yt-dlp**: for handling audio/video downloader.
+- **ffmpeg**: for handling video - audio processing.
+- **mpg123**: for handling audio playing.
+
 ## Installation
 
-To install Turntable, you need to have Go installed on your machine. Follow these steps:
+To install Turntable, you need to have all the above dependencies and **Go** installed on your machine. Follow these steps:
 
 1. Clone the repository:
    ```bash
